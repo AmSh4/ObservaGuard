@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: observaguard}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: backend, namespace: observaguard}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: backend}}
+  template:
+    metadata: {labels: {app: backend}}
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/example/observaguard-backend:0.1.0
+        env:
+        - {name: API_TOKEN, value: "changeme"}
+        - {name: DATABASE_URL, value: "sqlite:////data/events.db"}
+        - {name: ML_PORT, value: "8001"}
+        ports: [{containerPort: 8000}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: backend, namespace: observaguard}
+spec:
+  selector: {app: backend}
+  ports: [{port: 8000, targetPort: 8000}]

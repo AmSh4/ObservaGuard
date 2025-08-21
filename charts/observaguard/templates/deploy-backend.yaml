@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: observaguard-backend
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: observaguard-backend}}
+  template:
+    metadata: {labels: {app: observaguard-backend}}
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.image.backend }}
+        env:
+        - name: API_TOKEN
+          value: {{ .Values.apiToken | quote }}
+        - name: DATABASE_URL
+          value: "sqlite:////data/events.db"
+        - name: ML_PORT
+          value: "8001"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        ports: [{containerPort: 8000}]
+      volumes:
+      - name: data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: observaguard-backend}
+spec:
+  selector: {app: observaguard-backend}
+  type: {{ .Values.service.type }}
+  ports: [{port: 8000, targetPort: 8000}]

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: observaguard-ml
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: observaguard-ml}}
+  template:
+    metadata: {labels: {app: observaguard-ml}}
+    spec:
+      containers:
+      - name: ml
+        image: {{ .Values.image.ml }}
+        ports: [{containerPort: 8001}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: observaguard-ml}
+spec:
+  selector: {app: observaguard-ml}
+  type: {{ .Values.service.type }}
+  ports: [{port: 8001, targetPort: 8001}]

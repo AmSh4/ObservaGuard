@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: observaguard-agent
+spec:
+  selector: {matchLabels: {app: observaguard-agent}}
+  template:
+    metadata: {labels: {app: observaguard-agent}}
+    spec:
+      containers:
+      - name: agent
+        image: {{ .Values.image.agent }}
+        env:
+        - name: MOCK_MODE
+          value: "false"
+        ports: [{containerPort: 8080}]

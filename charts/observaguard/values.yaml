@@ -1,0 +1,8 @@
+image:
+  backend: "ghcr.io/example/observaguard-backend:0.1.0"
+  ml: "ghcr.io/example/observaguard-ml:0.1.0"
+  agent: "ghcr.io/example/observaguard-agent:0.1.0"
+  frontend: "ghcr.io/example/observaguard-frontend:0.1.0"
+apiToken: "changeme"
+service:
+  type: ClusterIP

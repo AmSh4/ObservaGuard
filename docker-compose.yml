@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    env_file: .env
+    ports: ["8000:8000"]
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+    depends_on: [ml]
+  ml:
+    build: ./ml
+    env_file: .env
+    ports: ["8001:8001"]
+    volumes:
+      - ./ml:/app
+      - ./data:/data
+  agent:
+    build: ./agent
+    env_file: .env
+    ports: ["8080:8080"]
+    volumes:
+      - ./agent:/app
+    environment:
+      - MOCK_MODE=true
+  frontend:
+    build: ./frontend
+    env_file: .env
+    ports: ["5173:5173"]
+    volumes:
+      - ./frontend:/app
+    depends_on: [backend]
